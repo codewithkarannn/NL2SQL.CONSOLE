@@ -21,3 +21,11 @@ public record Choice
 {
     public Message Message { get; init; } = null!;
 }
+
+public static class DemoData {
+    public const string DefaultSchema = @"
+        [DEMO SCHEMA]
+        Table: Cities (Id, Name, Region)
+        Table: WeatherRecords (Id, CityId, Temperature, Humidity, RecordedAt)
+        Relationship: WeatherRecords.CityId -> Cities.Id";
+}

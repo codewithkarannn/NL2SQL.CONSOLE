@@ -1,51 +1,27 @@
-namespace NL2SQL.POC.Console.Services;
-
-public class ConsoleSpinner : IDisposable
-{
-    private readonly int _delay;
+public class ConsoleSpinner : IDisposable {
     private bool _active;
     private readonly Thread _thread;
-    private int _counter;
+    public ConsoleSpinner() => _thread = new Thread(Spin);
 
-    public ConsoleSpinner(int delay = 100)
-    {
-        _delay = delay;
-        _thread = new Thread(Spin);
-    }
-
-    public void Start(string message = "Processing")
-    {
+    public void Start(string msg) {
         _active = true;
-        System.Console.Write($"{message} ");
-        if (_thread.ThreadState == ThreadState.Unstarted) 
-        {
-            _thread.Start();
-        }
+        System.Console.Write($"{msg} ");
+        if (_thread.ThreadState == ThreadState.Unstarted) _thread.Start();
     }
 
-    public void Stop()
-    {
+    public void Stop() {
         _active = false;
-        System.Console.Write("\b \b"); // Clean up last char
-        System.Console.WriteLine();
+        System.Console.Write("\b \b\n");
     }
 
-    private void Spin()
-    {
-        while (_active)
-        {
-            _counter++;
-            switch (_counter % 4)
-            {
-                case 0: System.Console.Write("/"); break;
-                case 1: System.Console.Write("-"); break;
-                case 2: System.Console.Write("\\"); break;
-                case 3: System.Console.Write("|"); break;
-            }
-            Thread.Sleep(_delay);
+    private void Spin() {
+        string[] chars = ["/", "-", "\\", "|"];
+        int i = 0;
+        while (_active) {
+            System.Console.Write(chars[i++ % 4]);
+            Thread.Sleep(100);
             System.Console.Write("\b");
         }
     }
-
     public void Dispose() => Stop();
 }
